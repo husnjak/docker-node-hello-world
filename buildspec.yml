@@ -4,7 +4,7 @@ phases:
   install:
     commands:
 #      Create CloudFormation Template
-      - aws cloudformation package --template-file samTemplate.yaml --kms-key-id ${KMSKEYID} --s3-bucket ${BUCKET} --output-template-file outputSamTemplate.yaml
+      - aws cloudformation package --template-file samTemplate.yml --kms-key-id ${KMSKEYID} --s3-bucket ${BUCKET} --output-template-file outputSamTemplate.yaml
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
