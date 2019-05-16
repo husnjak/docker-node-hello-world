@@ -38,7 +38,7 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups:
-            - !GetAtt IGDBcomSecurityGroup.Arn
+            - !Ref IGDBcomSecurityGroup.Arn
           Subnets: 
             - !GetAtt Subnet1.Arn
       Role: arn:aws:iam::121715975140:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS 
