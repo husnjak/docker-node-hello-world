@@ -38,12 +38,12 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups:
-            - !Ref IGDBcomSecurityGroup.Arn
+            - !Ref IGDBcomSecurityGroup
           Subnets: 
-            - !Ref Subnet1.Arn
+            - !Ref Subnet1
       Role: arn:aws:iam::121715975140:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS 
       ServiceName: "igdbcom-service"
-      TaskDefinition: !Ref IGDBcomTaskDefinition.Arn
+      TaskDefinition: !Ref IGDBcomTaskDefinition
 
   IGDBcomECR:
     Type: AWS::ECR::Repository
