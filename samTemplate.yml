@@ -40,7 +40,7 @@ Resources:
           SecurityGroups:
             - !Ref IGDBcomSecurityGroup.Arn
           Subnets: 
-            - !GetAtt Subnet1.Arn
+            - !Ref Subnet1.Arn
       Role: arn:aws:iam::121715975140:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS 
       ServiceName: "igdbcom-service"
       TaskDefinition: !Ref IGDBcomTaskDefinition.Arn
