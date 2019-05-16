@@ -45,11 +45,6 @@ Resources:
       ServiceName: "igdbcom-service"
       TaskDefinition: !Ref IGDBcomTaskDefinition
 
-  IGDBcomECR:
-    Type: AWS::ECR::Repository
-    Properties:
-      RepositoryName: "igdbcom-image"
-
   IGDBcomVPC:
     Type: AWS::EC2::VPC
     Properties:
@@ -111,7 +106,7 @@ Resources:
               - ecr:GetDownloadUrlForLayer
               - ecr:BatchGetImage
               Resource:
-                - !GetAtt IGDBcomECR.Arn
+                - 121715975140.dkr.ecr.us-east-1.amazonaws.com/igdbcom-image
             - Effect: Allow
               Action:
               - logs:CreateLogStream
