@@ -41,7 +41,6 @@ Resources:
             - !Ref IGDBcomSecurityGroup
           Subnets: 
             - !Ref Subnet1
-      Role: AWSServiceRoleForECS
       ServiceName: "igdbcom-service"
       TaskDefinition: !Ref IGDBcomTaskDefinition
 
