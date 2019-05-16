@@ -21,7 +21,7 @@ Resources:
       ContainerDefinitions:
         - 
           Name: "igdbcom-container"
-          Image: !GetAtt IGDBcomECR.Arn
+          Image: 121715975140.dkr.ecr.us-east-1.amazonaws.com/igdbcom-image
           PortMappings: 
             - 
               ContainerPort: 4000
