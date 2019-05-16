@@ -48,12 +48,21 @@ Resources:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/24
+      Tags:
+        - 
+          Key: "Name"
+          Value: "IGDBcom"
   
   Subnet1:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref IGDBcomVPC
       CidrBlock: 10.0.0.0/25
+      MapPublicIpOnLaunch: true
+      Tags:
+        - 
+          Key: "Name"
+          Value: "IGDBcom"
   
   InternetGateway:
     Type: AWS::EC2::InternetGateway
