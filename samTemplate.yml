@@ -43,7 +43,7 @@ Resources:
             - !GetAtt Subnet1.Arn
       Role: arn:aws:iam::121715975140:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS 
       ServiceName: "igdbcom-service"
-      TaskDefinition: !GetAtt IGDBcomTaskDefinition.Arn
+      TaskDefinition: !Ref IGDBcomTaskDefinition.Arn
 
   IGDBcomECR:
     Type: AWS::ECR::Repository
