@@ -1,12 +1,16 @@
 version: 0.2
 
 phases:
+  install:
+    commands:
+#      Create CloudFormation Template
+      - aws cloudformation package --template-file samTemplate.yaml --kms-key-id ${KMSKEYID} --s3-bucket ${BUCKET} --output-template-file outputSamTemplate.yaml
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPOSITORY_URI=121715975140.dkr.ecr.us-east-1.amazonaws.com/igdbcom-base-image
+      - REPOSITORY_URI=${IGDBCOMECR}
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
@@ -21,3 +25,7 @@ phases:
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
+artifacts:
+  files:
+    - samTemplate.yaml
+    - outputSamTemplate.yaml
