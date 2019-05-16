@@ -114,7 +114,7 @@ Resources:
               - ecr:GetDownloadUrlForLayer
               - ecr:BatchGetImage
               Resource:
-                - arn:aws:ecr:us-east-1:121715975140:repository/igdbcom-image
+                - arn:aws:ecr:*:*:repository/*
             - Effect: Allow
               Action:
               - logs:CreateLogStream
