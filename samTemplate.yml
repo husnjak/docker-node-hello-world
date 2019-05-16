@@ -113,10 +113,6 @@ Resources:
               - ecr:BatchCheckLayerAvailability
               - ecr:GetDownloadUrlForLayer
               - ecr:BatchGetImage
-              Resource:
-                - arn:aws:ecr:*:*:repository/*
-            - Effect: Allow
-              Action:
               - logs:CreateLogStream
               - logs:PutLogEvents
               Resource: "*"
