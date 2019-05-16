@@ -1,0 +1,120 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create ECS Service with Fargate
+
+Resources:
+  IGDBcomCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: igdbcom-cluster
+  
+    IGDBcomTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+          - "FARGATE"
+      Cpu: "1024"
+      Memory: "2048"
+      NetworkMode: "awsvpc"
+      ExecutionRoleArn: !GetAtt IGDBcomExecutionRole.Arn
+      TaskRoleArn: !GetAtt IGDBcomExecutionRole.Arn
+      Family: "igdbcom"
+      ContainerDefinitions:
+        - 
+          Name: "igdbcom-container"
+          Image: !GetAtt IGDBcomECR.Arn
+          PortMappings: 
+            - 
+              ContainerPort: 4000
+              HostPort: 4000
+              Protocol: tcp
+
+  IGDBcomService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref IGDBcomCluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      NetworkConfiguration: 
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !GetAtt IGDBcomSecurityGroup.Arn
+          Subnets: 
+            - !GetAtt Subnet1.Arn
+      Role: arn:aws:iam::121715975140:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS 
+      ServiceName: "igdbcom-service"
+      TaskDefinition: !GetAtt IGDBcomTaskDefinition.Arn
+
+  IGDBcomECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "igdbcom-image"
+
+  IGDBcomVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/24
+  
+  Subnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref IGDBcomVPC
+      CidrBlock: 10.0.0.0/25
+  
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+  
+  GatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref IGDBcomVPC
+  
+  IGDBcomSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Security group for IGDBcom"
+      GroupName: "igdbcom-security"
+      SecurityGroupIngress: 
+        - 
+          IpProtocol: tcp
+          FromPort: 4000
+          ToPort: 4000
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress: 
+        - 
+          IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+      VpcId: !Ref IGDBcomVPC
+
+  IGDBcomExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "igdbcom-execution-role"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - 
+          PolicyName: "igdbcom-execution-policy"
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - ecr:GetAuthorizationToken
+              - ecr:BatchCheckLayerAvailability
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+              Resource:
+                - !GetAtt IGDBcomECR.Arn
+            - Effect: Allow
+              Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+              Resource: "*"
+
