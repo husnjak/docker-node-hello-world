@@ -19,12 +19,6 @@ Resources:
       ExecutionRoleArn: !GetAtt IGDBcomExecutionRole.Arn
       TaskRoleArn: !GetAtt IGDBcomExecutionRole.Arn
       Family: "igdbcom"
-      LoadBalancers:
-        - 
-          ContainerName: "igdbcom-container"
-          ContainerPort: 4000
-          LoadBalancerName: "igdbcom-loadbalancer"
-          TargetGroupArn: !Ref IGDBELBTargetGroup
       ContainerDefinitions:
         - 
           Name: "igdbcom-container"
@@ -49,6 +43,12 @@ Resources:
           Subnets: 
             - !Ref Subnet1
       ServiceName: "igdbcom-service"
+      LoadBalancers:
+        - 
+          ContainerName: "igdbcom-container"
+          ContainerPort: 4000
+          LoadBalancerName: "igdbcom-loadbalancer"
+          TargetGroupArn: !Ref IGDBELBTargetGroup
       TaskDefinition: !Ref IGDBcomTaskDefinition
 
 # ---- AWS Internet Access settings ----
