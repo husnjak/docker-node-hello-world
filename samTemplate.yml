@@ -48,6 +48,7 @@ Resources:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/24
+      EnableDnsHostnames: true
       Tags:
         - 
           Key: "Name"
@@ -110,6 +111,12 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
       RouteTableId: !Ref IGDBcomRouteTable
+
+  IGDBRouteSubnetAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref IGDBcomRouteTable
+      SubnetId: !Ref Subnet1
 
   IGDBcomExecutionRole:
     Type: AWS::IAM::Role
