@@ -59,17 +59,16 @@ Resources:
       Name: igdbcom-loadbalancer
       Scheme: internet-facing
       SecurityGroups: 
-        -
-          !Ref IGDBcomSecurityGroup
+        - !Ref IGDBcomSecurityGroup
       Subnets:
-        - 
-          !Ref Subnet1
-        - 
-          !Ref Subnet2
+        - !Ref Subnet1
+        - !Ref Subnet2
       Type: application
 
   IGDBELBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn:
+      - IGDBLoadBalancer
     Properties:
       Name: !Join ['-', [!Ref 'AWS::StackName', 'igdb']]
       Port: 80
