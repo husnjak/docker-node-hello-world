@@ -66,10 +66,11 @@ Resources:
   
   InternetGateway:
     Type: AWS::EC2::InternetGateway
-    Tags:
-        - 
-          Key: "Name"
-          Value: "IGDBcom"
+    Properties:
+      Tags:
+          - 
+            Key: "Name"
+            Value: "IGDBcom"
   
   GatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
