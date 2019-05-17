@@ -2,6 +2,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: Create ECS Service with Fargate
 
 Resources:
+# ---- Docker Container settings ----
   IGDBcomCluster:
     Type: AWS::ECS::Cluster
     Properties:
@@ -44,10 +45,12 @@ Resources:
       ServiceName: "igdbcom-service"
       TaskDefinition: !Ref IGDBcomTaskDefinition
 
+# ---- AWS Internet Access settings ----
+
   IGDBcomVPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: 10.0.0.0/24
+      CidrBlock: 10.0.0.0/16
       EnableDnsHostnames: true
       Tags:
         - 
@@ -58,7 +61,18 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref IGDBcomVPC
-      CidrBlock: 10.0.0.0/24
+      CidrBlock: 10.0.6.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - 
+          Key: "Name"
+          Value: "IGDBcom"
+  
+  Subnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref IGDBcomVPC
+      CidrBlock: 10.0.24.0/24
       MapPublicIpOnLaunch: true
       Tags:
         - 
@@ -117,6 +131,14 @@ Resources:
     Properties:
       RouteTableId: !Ref IGDBcomRouteTable
       SubnetId: !Ref Subnet1
+
+    IGDBRouteSubnetAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref IGDBcomRouteTable
+      SubnetId: !Ref Subnet2
+
+# ---- ECS execution role ----
 
   IGDBcomExecutionRole:
     Type: AWS::IAM::Role
