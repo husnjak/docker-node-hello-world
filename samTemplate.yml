@@ -24,6 +24,7 @@ Resources:
           ContainerName: "igdbcom-container"
           ContainerPort: 4000
           LoadBalancerName: "igdbcom-loadbalancer"
+          TargetGroupArn: !Ref IGDBELBTargetGroup
         
       ContainerDefinitions:
         - 
@@ -52,6 +53,16 @@ Resources:
       TaskDefinition: !Ref IGDBcomTaskDefinition
 
 # ---- AWS Internet Access settings ----
+
+  IGDBELBTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Join ['-', [!Ref 'AWS::StackName', 'prisma']]
+      Port: 80
+      Protocol: HTTP
+      UnhealthyThresholdCount: 2
+      VpcId: !Ref 'VPC'
+      TargetType: 'ip'
 
   IGDBcomVPC:
     Type: AWS::EC2::VPC
