@@ -60,6 +60,7 @@ Resources:
   Subnet1:
     Type: AWS::EC2::Subnet
     Properties:
+      AvailabilityZone: us-east-1a
       VpcId: !Ref IGDBcomVPC
       CidrBlock: 10.0.6.0/24
       MapPublicIpOnLaunch: true
@@ -71,6 +72,7 @@ Resources:
   Subnet2:
     Type: AWS::EC2::Subnet
     Properties:
+      AvailabilityZone: us-east-1f
       VpcId: !Ref IGDBcomVPC
       CidrBlock: 10.0.24.0/24
       MapPublicIpOnLaunch: true
