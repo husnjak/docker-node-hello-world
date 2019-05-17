@@ -58,7 +58,9 @@ Resources:
       IpAddressType: ipv4
       Name: igdbcom-loadbalancer
       Scheme: internet-facing
-      SecurityGroups: !Ref IGDBcomSecurityGroup
+      SecurityGroups: 
+        -
+          !Ref IGDBcomSecurityGroup
       SubnetMappings:
         - 
           SubnetId: !Ref Subnet1
