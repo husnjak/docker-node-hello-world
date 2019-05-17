@@ -132,7 +132,7 @@ Resources:
       RouteTableId: !Ref IGDBcomRouteTable
       SubnetId: !Ref Subnet1
 
-    IGDBRouteSubnetAssociation2:
+  IGDBRouteSubnetAssociation2:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref IGDBcomRouteTable
