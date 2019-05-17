@@ -57,7 +57,7 @@ Resources:
   IGDBELBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Join ['-', [!Ref 'AWS::StackName', 'prisma']]
+      Name: !Join ['-', [!Ref 'AWS::StackName', 'igdb']]
       Port: 80
       Protocol: HTTP
       UnhealthyThresholdCount: 2
