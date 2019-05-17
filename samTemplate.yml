@@ -271,6 +271,6 @@ Resources:
                   - ecs:DescribeServices
                   - ecs:UpdateService
                   - cloudwatch:DescribeAlarms
-                  - cloudwwatch:PutMetricAlarm
+                  - cloudwatch:PutMetricAlarm
                 Resource: '*'
     
