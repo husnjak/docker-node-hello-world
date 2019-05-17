@@ -81,6 +81,16 @@ Resources:
       VpcId: !Ref 'IGDBcomVPC'
       TargetType: 'ip'
 
+  IGDBcomLoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref IGDBELBTargetGroup
+          Type: 'forward'
+      LoadBalancerArn: !Ref IGDBLoadBalancer
+      Port: 80
+      Protocol: HTTP
+
   IGDBcomVPC:
     Type: AWS::EC2::VPC
     Properties:
