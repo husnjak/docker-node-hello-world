@@ -50,6 +50,31 @@ Resources:
           TargetGroupArn: !Ref IGDBELBTargetGroup
       TaskDefinition: !Ref IGDBcomTaskDefinition
 
+# ---- AWS Autoscaling ----
+
+  IGDBcomScalableTarget:
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      MaxCapacity: 5
+      MinCapacity: 1
+      ResourceId: !Join ['/', [service, !Ref IGDBcomCluster, !GetAtt IGDBcomService.Name]]
+      RoleArn: !GetAtt IGDBcomAutoscalingRole.Arn
+      ScalableDimension: ecs:service:DesiredCount
+      ServiceNamespace: ecs
+
+  IGDBcomTargetTrackingScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: igdbcom-autoscaling-policy
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref IGDBcomScalableTarget
+      TargetTrackingScalingPolicyConfiguration:
+        PredefinedMetricSpecification:  
+          PredifinedMetricType: ECSServiceAverageMemoryUtilization
+        ScaleInCooldown: 10
+        ScaleOutCooldown: 10
+        TargetValue: 95
+
 # ---- AWS Internet Access settings ----
 
   IGDBLoadBalancer:
@@ -225,3 +250,27 @@ Resources:
               - logs:PutLogEvents
               Resource: "*"
 
+  IGDBcomAutoscalingRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: IGDBcom-autoscaler-policy
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: application-autoscaling.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Policies:
+        -  
+          PolicyName: service-autoscaling
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - application-autoscaling:*
+                  - ecs:DescribeService
+                  - ecs:UpdateService
+                  - cloudwatch:DescribeAlarms
+                  - cloudwwatch:PutMetricAlarm
+                Resource: '*'
+    
