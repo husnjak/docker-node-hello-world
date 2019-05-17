@@ -61,7 +61,7 @@ Resources:
       Port: 80
       Protocol: HTTP
       UnhealthyThresholdCount: 2
-      VpcId: !Ref 'VPC'
+      VpcId: !Ref 'IGDBcomVPC'
       TargetType: 'ip'
 
   IGDBcomVPC:
