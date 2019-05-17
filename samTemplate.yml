@@ -268,7 +268,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - application-autoscaling:*
-                  - ecs:DescribeService
+                  - ecs:DescribeServices
                   - ecs:UpdateService
                   - cloudwatch:DescribeAlarms
                   - cloudwwatch:PutMetricAlarm
