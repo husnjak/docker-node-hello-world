@@ -98,7 +98,7 @@ Resources:
   IGDBcomRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      Vpcid: !Ref IGDBcomVPC
+      VpcId: !Ref IGDBcomVPC
       Tags:
         - 
           Key: "Name"
