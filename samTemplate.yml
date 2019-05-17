@@ -47,7 +47,6 @@ Resources:
         - 
           ContainerName: "igdbcom-container"
           ContainerPort: 4000
-          LoadBalancerName: "igdbcom-loadbalancer"
           TargetGroupArn: !Ref IGDBELBTargetGroup
       TaskDefinition: !Ref IGDBcomTaskDefinition
 
