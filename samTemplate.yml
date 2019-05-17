@@ -19,6 +19,12 @@ Resources:
       ExecutionRoleArn: !GetAtt IGDBcomExecutionRole.Arn
       TaskRoleArn: !GetAtt IGDBcomExecutionRole.Arn
       Family: "igdbcom"
+      LoadBalancers:
+        - 
+          ContainerName: "igdbcom-container"
+          ContainerPort: 4000
+          LoadBalancerName: "igdbcom-loadbalancer"
+        
       ContainerDefinitions:
         - 
           Name: "igdbcom-container"
