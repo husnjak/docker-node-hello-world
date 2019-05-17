@@ -58,7 +58,7 @@ Resources:
       MaxCapacity: 5
       MinCapacity: 1
       ResourceId: !Join ['/', [service, !Ref IGDBcomCluster, !GetAtt IGDBcomService.Name]]
-      RoleArn: !GetAtt IGDBcomAutoscalingRole.Arn
+      RoleARN: !GetAtt IGDBcomAutoscalingRole.Arn
       ScalableDimension: ecs:service:DesiredCount
       ServiceNamespace: ecs
 
