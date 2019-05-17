@@ -109,6 +109,10 @@ Resources:
           IpProtocol: "-1"
           CidrIp: 0.0.0.0/0
       VpcId: !Ref IGDBcomVPC
+      Tags:
+        - 
+          Key: "Name"
+          Value: "IGDBcom"
 
   IGDBcomRouteTable:
     Type: AWS::EC2::RouteTable
