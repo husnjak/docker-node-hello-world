@@ -61,11 +61,6 @@ Resources:
       SecurityGroups: 
         -
           !Ref IGDBcomSecurityGroup
-      SubnetMappings:
-        - 
-          SubnetId: !Ref Subnet1
-        - 
-          SubnetId: !Ref Subnet2
       Subnets:
         - 
           !Ref Subnet1
