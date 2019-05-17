@@ -52,6 +52,25 @@ Resources:
 
 # ---- AWS Internet Access settings ----
 
+  IGDBLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      IpAdressType: ipv4
+      Name: igdbcom-loadbalancer
+      Scheme: internet-facing
+      SecurityGroups: !Ref IGDBcomSecurityGroup
+      SubnetMappings:
+        - 
+          SubnetId: !Ref Subnet1
+        - 
+          SubnetId: !Ref Subnet2
+      Subnets:
+        - 
+          !Ref Subnet1
+        - 
+          !Ref Subnet2
+      Type: application
+
   IGDBELBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
