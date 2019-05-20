@@ -20,7 +20,7 @@ phases:
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
       - echo Run tests
-      - docker run --name image_test --rm -i -t $REPOSITORY_URI:latest bash
+      - docker run --name image_test --rm -i -t . bash
       - docker exec -d image_test ./run.sh
   post_build:
     commands: 
