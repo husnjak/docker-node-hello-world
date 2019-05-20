@@ -1,7 +1,5 @@
 FROM node:alpine
 COPY . /src
-COPY run.sh /src/run.sh
-WORKDIR /src
-RUN npm install
+RUN cd /src && npm install
 # EXPOSE 4000
-CMD ["/bin/sh", "/src/run.sh"]
+CMD ["node", "/src/server.js"]
