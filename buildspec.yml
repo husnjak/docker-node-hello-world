@@ -19,6 +19,8 @@ phases:
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker run --name image_test --rm -i -t . bash
+      - docker exec -d image_test ./run.sh
   post_build:
     commands: 
       - echo Build complete on `date`
