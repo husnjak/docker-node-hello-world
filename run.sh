@@ -1,5 +1,6 @@
-#/bin/bash
+#!/bin/sh
 
-node ./src/server.js &
+node server.js &
+sleep 2
 npm run test
 #npm run nightwatch
