@@ -2,4 +2,4 @@
 
 node ./src/server.js &
 npm run test
-npm run nightwatch
+#npm run nightwatch
