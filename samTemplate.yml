@@ -50,31 +50,6 @@ Resources:
           TargetGroupArn: !Ref IGDBELBTargetGroup
       TaskDefinition: !Ref IGDBcomTaskDefinition
 
-# ---- AWS Autoscaling ----
-
-  IGDBcomScalableTarget:
-    Type: AWS::ApplicationAutoScaling::ScalableTarget
-    Properties:
-      MaxCapacity: 5
-      MinCapacity: 1
-      ResourceId: !Join ['/', [service, !Ref IGDBcomCluster, !GetAtt IGDBcomService.Name]]
-      RoleARN: !GetAtt IGDBcomAutoscalingRole.Arn
-      ScalableDimension: ecs:service:DesiredCount
-      ServiceNamespace: ecs
-
-  IGDBcomTargetTrackingScalingPolicy:
-    Type: AWS::ApplicationAutoScaling::ScalingPolicy
-    Properties:
-      PolicyName: igdbcom-autoscaling-policy
-      PolicyType: TargetTrackingScaling
-      ScalingTargetId: !Ref IGDBcomScalableTarget
-      TargetTrackingScalingPolicyConfiguration:
-        PredefinedMetricSpecification:  
-          PredefinedMetricType: ECSServiceAverageMemoryUtilization
-        ScaleInCooldown: 10
-        ScaleOutCooldown: 10
-        TargetValue: 95
-
 # ---- AWS Internet Access settings ----
 
   IGDBLoadBalancer:
