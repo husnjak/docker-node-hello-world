@@ -1,32 +1,48 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Create ECS Service with Fargate
+Parameters:
+  ServiceName:
+    Type: String
+    Default: IGDBcom
+  ContainerPort:
+    Type: Number
+    Default: 4000
+  ContainerCPU:
+    Type: String
+    Default: 512
+  ContainerMemory: 
+    Type: String
+    Default: 2048
+  Image:
+    Type: String
+    Default: 121715975140.dkr.ecr.us-east-1.amazonaws.com/igdbcom-image
 
 Resources:
 # ---- Docker Container settings ----
   IGDBcomCluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: igdbcom-cluster
+      ClusterName: !Join ['', [!Ref ServiceName, Cluster]]
   
   IGDBcomTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
       RequiresCompatibilities:
           - "FARGATE"
-      Cpu: "1024"
-      Memory: "2048"
+      Cpu: !Ref ContainerCPU
+      Memory: !Ref ContainerMemory
       NetworkMode: "awsvpc"
       ExecutionRoleArn: !GetAtt IGDBcomExecutionRole.Arn
       TaskRoleArn: !GetAtt IGDBcomExecutionRole.Arn
-      Family: "igdbcom"
+      Family: !Ref ServiceName
       ContainerDefinitions:
         - 
-          Name: "igdbcom-container"
-          Image: 121715975140.dkr.ecr.us-east-1.amazonaws.com/igdbcom-image
+          Name: !Join ['', [!Ref ServiceName, Container]]
+          Image: !Ref Image
           PortMappings: 
             - 
-              ContainerPort: 4000
-              HostPort: 4000
+              ContainerPort: !Ref ContainerPort
+              HostPort: !Ref ContainerPort
               Protocol: tcp
 
   IGDBcomService:
@@ -45,8 +61,8 @@ Resources:
       ServiceName: "igdbcom-service"
       LoadBalancers:
         - 
-          ContainerName: "igdbcom-container"
-          ContainerPort: 4000
+          ContainerName: !Join ['', [!Ref ServiceName, Container]]
+          ContainerPort: !Ref ContainerPort
           TargetGroupArn: !Ref IGDBELBTargetGroup
       TaskDefinition: !Ref IGDBcomTaskDefinition
 
@@ -56,7 +72,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       IpAddressType: ipv4
-      Name: igdbcom-loadbalancer
+      Name: !Join ['', [!Ref ServiceName, LoadBalancer]]
       Scheme: internet-facing
       SecurityGroups: 
         - !Ref IGDBcomSecurityGroup
@@ -70,7 +86,7 @@ Resources:
     DependsOn:
       - IGDBLoadBalancer
     Properties:
-      Name: !Join ['-', [!Ref 'AWS::StackName', 'igdb']]
+      Name: !Join ['-', [!Ref ServiceName, TargetGroup]]
       Port: 80
       Protocol: HTTP
       UnhealthyThresholdCount: 2
@@ -97,7 +113,7 @@ Resources:
       Tags:
         - 
           Key: "Name"
-          Value: "IGDBcom"
+          Value: !Ref ServiceName
   
   Subnet1:
     Type: AWS::EC2::Subnet
@@ -109,7 +125,7 @@ Resources:
       Tags:
         - 
           Key: "Name"
-          Value: "IGDBcom"
+          Value: !Ref ServiceName
   
   Subnet2:
     Type: AWS::EC2::Subnet
@@ -121,7 +137,7 @@ Resources:
       Tags:
         - 
           Key: "Name"
-          Value: "IGDBcom"
+          Value: !Ref ServiceName
   
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -129,7 +145,7 @@ Resources:
       Tags:
           - 
             Key: "Name"
-            Value: "IGDBcom"
+            Value: !Ref ServiceName
   
   GatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -141,12 +157,12 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: "Security group for IGDBcom"
-      GroupName: "igdbcom-security"
+      GroupName: !Join ['-', [!Ref ServiceName, Security]]
       SecurityGroupIngress: 
         - 
           IpProtocol: tcp
-          FromPort: 4000
-          ToPort: 4000
+          FromPort: !Ref ContainerPort
+          ToPort: !Ref ContainerPort
           CidrIp: 0.0.0.0/0
         - 
           IpProtocol: tcp
@@ -166,7 +182,7 @@ Resources:
       Tags:
         - 
           Key: "Name"
-          Value: "IGDBcom"
+          Value: !Ref ServiceName
 
   IGDBcomRouteTable:
     Type: AWS::EC2::RouteTable
@@ -175,7 +191,7 @@ Resources:
       Tags:
         - 
           Key: "Name"
-          Value: "IGDBcom"
+          Value: !Ref ServiceName
 
   IGDBcomRoute:
     Type: AWS::EC2::Route
@@ -224,28 +240,3 @@ Resources:
               - logs:CreateLogStream
               - logs:PutLogEvents
               Resource: "*"
-
-  IGDBcomAutoscalingRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: IGDBcom-autoscaler-policy
-      AssumeRolePolicyDocument:
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: application-autoscaling.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        -  
-          PolicyName: service-autoscaling
-          PolicyDocument:
-            Statement:
-              - Effect: Allow
-                Action:
-                  - application-autoscaling:*
-                  - ecs:DescribeServices
-                  - ecs:UpdateService
-                  - cloudwatch:DescribeAlarms
-                  - cloudwatch:PutMetricAlarm
-                Resource: '*'
-    
