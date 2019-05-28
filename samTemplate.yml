@@ -58,7 +58,7 @@ Resources:
             - !Ref IGDBcomSecurityGroup
           Subnets: 
             - !Ref Subnet1
-      ServiceName: "igdbcom-service"
+      ServiceName: !Join ['', [!Ref ServiceName, Service]]
       LoadBalancers:
         - 
           ContainerName: !Join ['', [!Ref ServiceName, Container]]
@@ -157,7 +157,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: "Security group for IGDBcom"
-      GroupName: !Join ['-', [!Ref ServiceName, Security]]
+      GroupName: !Join ['', [!Ref ServiceName, Security]]
       SecurityGroupIngress: 
         - 
           IpProtocol: tcp
